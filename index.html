@@ -22,7 +22,6 @@
   padding:0;
   box-sizing:border-box;
   font-family:"Poppins",sans-serif;
-  cursor:none;
 }
 
 body {
@@ -41,6 +40,20 @@ body {
   transform:translate(-50%,-50%);
   z-index:9999;
   transition:transform .1s ease;
+}
+
+/* só desktop */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    cursor: none;
+  }
+}
+
+/* mobile */
+@media (hover: none) and (pointer: coarse) {
+  .cursor {
+    display: none !important;
+  }
 }
 
 /* NAV */
@@ -195,15 +208,6 @@ button.active{
     opacity:0;
   }
 }
-@media (hover: none) and (pointer: coarse) {
-  * {
-    cursor: auto;
-  }
-
-  .cursor {
-    display: none;
-  }
-}
 </style>
 </head>
 
@@ -257,7 +261,7 @@ const btn=document.getElementById("btn");
 const modal=document.getElementById("modal");
 
 /* CURSOR */
-if (window.matchMedia("(hover: hover)").matches) {
+if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
   const cursor=document.getElementById("cursor");
   document.addEventListener("mousemove",e=>{
     cursor.style.left=e.clientX+"px";
