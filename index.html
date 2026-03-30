@@ -4,24 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
 
 <title>Desculpa Carol 💖</title>
 
 <style>
 :root {
-  --bg1:#ffe0ec;
-  --bg2:#ffb6cf;
-  --accent:#ff4d8d;
-  --dark:#a61e5c;
-  --glass:rgba(255,255,255,0.25);
+  --bg1:#fff0f5;
+  --bg2:#ffd6e7;
+  --accent:#ff5c9a;
+  --dark:#b03060;
+  --glass:rgba(255,255,255,0.35);
 }
 
 * {
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:"Poppins",sans-serif;
+  font-family:"Quicksand",sans-serif;
+}
+
+h1, h2, h4 {
+  font-family: "Playfair Display", serif;
+  letter-spacing:0.5px;
 }
 
 body {
@@ -49,8 +54,8 @@ body {
   }
 }
 
-/* mobile */
-@media (hover: none) and (pointer: coarse) {
+/* mobile (força mesmo esconder) */
+@media (hover: none), (pointer: coarse) {
   .cursor {
     display: none !important;
   }
@@ -260,13 +265,18 @@ const scoreEl=document.getElementById("score");
 const btn=document.getElementById("btn");
 const modal=document.getElementById("modal");
 
+/* DETECTAR MOBILE (extra safety) */
+const isMobile = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
 /* CURSOR */
-if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+if (!isMobile) {
   const cursor=document.getElementById("cursor");
   document.addEventListener("mousemove",e=>{
     cursor.style.left=e.clientX+"px";
     cursor.style.top=e.clientY+"px";
   });
+} else {
+  document.getElementById("cursor").remove(); // remove mesmo do DOM
 }
 
 /* CLICK HEARTS */
