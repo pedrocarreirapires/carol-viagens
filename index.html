@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<title>Desbloquear Perdão 💖</title>
+
+<style>
+:root {
+  --bg1:#ffe0ec;
+  --bg2:#ffb6cf;
+  --accent:#ff4d8d;
+  --dark:#a61e5c;
+  --glass:rgba(255,255,255,0.25);
+}
+
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:"Poppins",sans-serif;
+  cursor:none;
+}
+
+body {
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+}
+
+/* CURSOR */
+.cursor{
+  position:fixed;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff,var(--accent));
+  box-shadow:0 0 15px var(--accent);
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:9999;
+  transition:transform .1s ease;
+}
+
+/* NAV */
+nav{
+  position:fixed;
+  width:100%;
+  padding:1rem;
+  backdrop-filter:blur(10px);
+  background:var(--glass);
+  text-align:center;
+}
+
+/* MAIN */
+main{
+  padding:6rem 1.2rem 2rem;
+  text-align:center;
+  max-width:900px;
+  margin:auto;
+}
+
+.intro{
+  margin:1rem auto 2rem;
+  color:#7a2c50;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:0.8rem;
+  margin-bottom:2rem;
+}
+
+.card{
+  background:var(--glass);
+  padding:0.8rem;
+  border-radius:12px;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+}
+
+/* GAME */
+.game{
+  height:300px;
+  border-radius:15px;
+  background:var(--glass);
+  overflow:hidden;
+  position:relative;
+}
+
+.heart{
+  position:absolute;
+  font-size:22px;
+  animation:fall linear forwards;
+}
+
+/* BUTTON */
+button{
+  margin-top:1rem;
+  padding:0.8rem 1.5rem;
+  border:none;
+  border-radius:30px;
+  background:linear-gradient(45deg,var(--accent),var(--dark));
+  color:white;
+  opacity:.4;
+  pointer-events:none;
+}
+
+button.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(6px);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  opacity:0;
+  pointer-events:none;
+  transition:.6s;
+}
+
+.modal.active{
+  opacity:1;
+  pointer-events:auto;
+}
+
+/* CANVAS */
+#fireworks{
+  position:absolute;
+  inset:0;
+  z-index:1;
+}
+
+/* TEXTO */
+.modal-content{
+  position:relative;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  padding:1.5rem;
+  text-align:center;
+}
+
+.msg{
+  color:white;
+  font-size:clamp(1.4rem, 4vw, 2rem);
+  opacity:0;
+  transform:translateY(20px);
+  animation:fadeUp 1.5s forwards 1s;
+}
+
+/* IMG */
+.modal img{
+  width:280px;
+  border-radius:20px;
+  transform:scale(.5);
+  opacity:0;
+  transition:1.5s ease;
+  z-index:2;
+}
+
+.modal.active img{
+  transform:scale(1);
+  opacity:1;
+}
+
+/* ANIMAÇÕES */
+@keyframes fall{
+  from{transform:translateY(-50px);}
+  to{transform:translateY(350px);}
+}
+
+@keyframes fadeUp{
+  to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes explode{
+  to{
+    transform:translate(var(--x),var(--y));
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav><h2>Agências de Viagens são fixes</h2></nav>
+
+<main>
+
+<h1>Olá Carolina… eu disse várias asneiras na sexta...</h1>
+
+<p class="intro">
+Chamar “scam” às agências foi má decisão…  
+por isso venho assumir o meu erro e pedir-te <strong>desculpa!</strong>
+</p>
+
+<h4>Após uma profunda reflexão, admito que as agências:</h4> <br>
+
+<div class="cards">
+  <div class="card">✈️ Evitam erros</div>
+  <div class="card">🧠 Pensam por nós</div>
+  <div class="card">🌍 Orientam-nos</div>
+  <div class="card">😅 Salvam-nos</div>
+</div>
+
+<p id="score">Pontos: 0 / 10</p>
+
+<div class="game" id="game"></div>
+
+<button id="btn" onclick="abrirModal()">Desbloquear Perdão 💖</button>
+
+</main>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <canvas id="fireworks"></canvas>
+
+  <div class="modal-content">
+    <h2 class="msg">Obrigado por me desculpares 💖</h2>
+    <img src="imgs/img.png">
+  </div>
+</div>
+
+<script>
+let score=0;
+const game=document.getElementById("game");
+const scoreEl=document.getElementById("score");
+const btn=document.getElementById("btn");
+const modal=document.getElementById("modal");
+
+/* CURSOR */
+const cursor=document.getElementById("cursor");
+document.addEventListener("mousemove",e=>{
+  cursor.style.left=e.clientX+"px";
+  cursor.style.top=e.clientY+"px";
+});
+
+/* CLICK HEARTS */
+document.addEventListener("click",(e)=>{
+  for(let i=0;i<5;i++){
+    const h=document.createElement("div");
+    h.innerHTML="💖";
+    h.style.position="fixed";
+    h.style.left=e.clientX+"px";
+    h.style.top=e.clientY+"px";
+    h.style.animation="explode 1s forwards";
+    h.style.setProperty('--x',(Math.random()*200-100)+"px");
+    h.style.setProperty('--y',(Math.random()*-200)+"px");
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),1000);
+  }
+});
+
+/* GAME */
+function spawnHeart(){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML="💖";
+  heart.style.left=Math.random()*90+"%";
+  heart.style.animationDuration="3s";
+
+  heart.onclick=()=>{
+    score++;
+    scoreEl.innerText=`Pontos: ${score} / 10`;
+    heart.remove();
+    if(score>=10) btn.classList.add("active");
+  };
+
+  game.appendChild(heart);
+  setTimeout(()=>heart.remove(),4000);
+}
+setInterval(spawnHeart,800);
+
+/* MODAL */
+function abrirModal(){
+  modal.classList.add("active");
+  startFireworks();
+}
+
+modal.onclick=()=>modal.classList.remove("active");
+
+/* FOGOS */
+function startFireworks(){
+  const canvas=document.getElementById("fireworks");
+  const ctx=canvas.getContext("2d");
+
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+
+  let particles=[];
+
+  function explode(x,y){
+    for(let i=0;i<80;i++){
+      particles.push({
+        x,y,
+        angle:Math.random()*Math.PI*2,
+        speed:Math.random()*5,
+        life:80
+      });
+    }
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+      p.x+=Math.cos(p.angle)*p.speed;
+      p.y+=Math.sin(p.angle)*p.speed;
+      p.speed*=0.95;
+      p.life--;
+
+      ctx.fillStyle="pink";
+      ctx.fillRect(p.x,p.y,2,2);
+
+      if(p.life<=0) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  setInterval(()=>{
+    explode(Math.random()*canvas.width,Math.random()*canvas.height/2);
+  },600);
+
+  animate();
+}
+</script>
+
+</body>
+</html>
